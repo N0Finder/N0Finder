@@ -5,8 +5,7 @@ on:
     branches:
       - main
   schedule:
-        # Runs everyday at 1:00 AM
-        - cron: "0 1 * * *"
+    - cron: "0 1 * * *"
 
 permissions:
   contents: write
@@ -36,20 +35,14 @@ jobs:
         run: |
           javascript-obfuscator origin.js --output _worker.js \
           --compact true \
-          --control-flow-flattening true \
-          --control-flow-flattening-threshold 0.8 \  # 比原1.0更平衡性能[1,7](@ref)
-          --dead-code-injection true \
-          --dead-code-injection-threshold 0.4 \     # 避免过度增加代码体积[3](@ref)
           --identifier-names-generator hexadecimal \
           --rename-globals true \
           --string-array true \
-          --string-array-encoding 'rc4' \           # 比base64更安全的加密方式[4](@ref)
-          --string-array-threshold 0.75 \           # 提升字符串保护覆盖率[1](@ref)
-          --transform-object-keys true \            # 新增对象键混淆[4](@ref)
-          --unicode-escape-sequence true \
-          --self-defending true \                   # 新增防格式化保护[7](@ref)
-          --debug-protection true \                 # 新增调试保护[4](@ref)
-          --disable-console-output true             # 禁用控制台输出[7](@ref)
+          --string-array-encoding 'base64' \
+          --string-array-threshold 0.75 \
+          --transform-object-keys true \
+          --self-defending false \
+          --simplify true
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
